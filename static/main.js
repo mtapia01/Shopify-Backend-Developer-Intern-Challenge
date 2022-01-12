@@ -1,5 +1,6 @@
 $(document).ready(function () {
-  $("#addItem").click(function () {
-    alert("test");
+  $("#addItemBtn").click(function () {
+    let item = $("#itemInput").val();
+    console.log(item);
   });
 });
