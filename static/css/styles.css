@@ -1,0 +1,37 @@
+.hidden {
+  display: none;
+}
+/* .rainbow-text {
+  background: linear-gradient(
+    to right,
+    orange,
+    yellow,
+    green,
+    cyan,
+    blue,
+    violet
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+} */
+.spaceside {
+  margin-right: 300px;
+}
+.spacesright {
+  margin-right: 2000px;
+}
+.spaceup {
+  margin-top: 300px;
+}
+.tableheader thead {
+  display: table-header-group;
+}
+
+.right {
+  position: absolute;
+  right: 0px;
+  /* width: 300px; */
+  /* border: 3px solid #73AD21; */
+  padding: 10px;
+}
+/* Dark mode from https://github.com/ForEvolve/bootstrap-dark */
