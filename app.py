@@ -12,12 +12,6 @@ CORS(app)
 def home():
     return render_template('index.html')
 
-@app.route('/verifySong')
-def verifySong():
-        song = request.args.get('songName')
-        print("https://www.youtube.com/results?search_query=", song)
-        return request.args.get('https://www.youtube.com/results?search_query=' + song)
-
 
 
 # ===============================================================================
