@@ -13,12 +13,28 @@
     <script src="static/main.js"></script>
     <link rel="stylesheet" type="text/css" href="static/css/styles.css" />
   </head>
+  <br></br>
   <body>
+    <div class="row container">
+      <div class="col">
+        <b>Add item</b>
+        <input type="text" placeholder="Item" id="itemInput"></input>
+        <button type="button" class="btn btn-primary btn-sml" id="addItemBtn">Add</button>
+        
+      </div>
+      <div class="col">
+        <b>Current List</b>
+        <div id="itemList"></div>
+      </div>
+    </div>
     <div class="container">
-      <b>Add item</b>
-      <br></br>
-      <input type="text" placeholder="Item" id="itemInput"></input>
-      <button type="button" class="btn btn-primary btn-sml" id="addItemBtn">Add</button>
+      <b>Inventory</b>
+        <table class="table table-bordered table table-hover" id="inventory">
+          <td><b>Item</b></td>
+          <td><b>Date</b></td>    
+
+        </table>
+        <button type="button" class="btn btn-primary btn-sml" id="downloadBtn">Download</button>
     </div>
   </body>
 </html>
