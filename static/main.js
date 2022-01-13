@@ -22,11 +22,13 @@ $(document).ready(function () {
     for (let i = 0; i < itemListings.length; i++) {
       let current = itemListings[i];
       let fileItem = current["cleanItem"];
+      $("#itemList").append(`<b>${fileItem}</b><br />`);
       let fileDate = current["cleanDate"];
 
-      let line = `<tr><td>${fileItem}</td>`;
+      let line = `<tr><td><b>${fileItem}</b></td>`;
       line = line + `<td>${fileDate}</td></tr>`;
       $("#inventory").append(line);
+      // $("#itemList").append(fileItem`'\n'`);
     }
   });
 
@@ -37,7 +39,7 @@ $(document).ready(function () {
       for (let i = itemID + 1; i < items; i++) {
         let item = items[i]["items"];
 
-        $("#itemList").append(`${item}<br></br>`);
+        $("#itemList").append(`${item}'\n'`);
       }
     });
   }
@@ -46,7 +48,7 @@ $(document).ready(function () {
   $("#addItemBtn").click(function () {
     let item = $("#itemInput").val();
 
-    $.get("/listOfItems", item, function (response) {
+    $.get("/listOfItems", { item: item }, function (response) {
       getItemList();
     });
   });
