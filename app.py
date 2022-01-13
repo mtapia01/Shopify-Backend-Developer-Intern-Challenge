@@ -32,16 +32,11 @@ def newitem():
 @app.route('/cvsDisplay')
 def cvsDisplay():
         cvsFile = open('inventory.csv', 'r')
-        # print(cvsFile)
         inventory = cvsFile.readlines()
         cvsFile.close
-        # print(inventory)
-        
-        for i in range(len(inventory)):
-                inventory[i] = inventory[i].strip()
 
         cleanFile = []
-
+        
         for i in range(len(inventory)):
                 row = inventory[i]
                 element = row.split(',')
@@ -55,30 +50,49 @@ def cvsDisplay():
 
         return {'cleanListing': cleanFile}
 
-@app.route('/listOfItems')
-def listOfItems():
-        item = request.args.get('item')
-        print(item)
-        file = open('itemList.txt', 'a')
-        file.writelines([json.dumps(item), '\n'])
-        file.close()
+@app.route('/edit')
+def edit():
+        cvsFile = open('inventory.csv', 'r')
+        inventory = cvsFile.readlines()
+        cvsFile.close
 
-        return "", 201
+        cleanFile = []
+        for i in range(len(inventory)):
+                inventory[i] = inventory[i].strip()
+                cleanFile = []
+                if request.args.get("editItem") > 0:
+                        for i in range(len(inventory)):
+                                row = inventory[i]
+                                element = row.split(',')
+                                item = element[0]
+                                itemDate = element[1]
+                                cleanRow = {
+                                        'cleanItem': item,
+                                        'cleanDate': itemDate
+                                }
+                                if cleanRow[0] == request.args.get("editItem"):
+                                        cleanRow[0] = request.args.get("updateInput")
 
-@app.route('/getItemList')
-def getItemList():
-        file = open('itemList.txt', 'r')
-        lines = file.readlines()
-
-        items = []
-
-        for i in lines:
-                i = i.strip()
-                itemJSON = json.loads(i)
-                items.append(itemJSON)
-        file.close()
-
-        return {"items": items}
+                                cleanFile.append(cleanRow)
+                elif request.args.get("deleteItem") > 0:
+                        for i in range(len(inventory)):
+                                row = inventory[i]
+                                element = row.split(',')
+                                item = element[0]
+                                itemDate = element[1]
+                                cleanRow = {
+                                        'cleanItem': item,
+                                        'cleanDate': itemDate
+                                }
+                                if cleanRow[0] == request.args.get("deleteItem"):
+                                        cleanRow[0] = ""
+                                        cleanRow[1] = ""
+                                cleanFile.append(cleanRow)
+                with open('inventory.csv', 'w') as myfile:
+                        myfile.write(cleanFile)
+                cvsDisplay()
+                
+        
 
 # ===============================================================================
 if __name__ == '__main__':
