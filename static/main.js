@@ -22,7 +22,8 @@ $(document).ready(function () {
     for (let i = 0; i < itemListings.length; i++) {
       let current = itemListings[i];
       let fileItem = current["cleanItem"];
-      $("#itemList").append(`-<b>${fileItem}</b><br />`);
+      let fileID = current["id"];
+      $("#itemList").append(`-<b>${fileItem} ID:${fileID}</b><br />`);
       let fileDate = current["cleanDate"];
 
       let line = `<tr><td><b>${fileItem}</b></td>`;
@@ -33,27 +34,26 @@ $(document).ready(function () {
   $("#editBtn").click(function () {
     let oldItem = $("#editInput").val();
     let newItem = $("#updateInput").val();
+    editpair = { oldItem: oldItem, newItem: newItem };
 
-    $.get(
-      "/cvsDisplay",
-      { oldItem: "oldItem", newItem: "newItem" },
-      function (response) {
-        console.log(response["inventoryList"]);
-        let listing = response["inventoryList"];
-        let listingItem = listing[0];
-        let listingDate = listing[1];
-        let line = `<tr><td>${listingItem}</td></tr>`;
-        line = line + `<td>${listingDate}</td>`;
-        $("inventory").append(line);
-        window.location.reload();
-      }
-    );
+    $.get("/edit", editpair, function (response) {
+      console.log(response["cleanListing"]);
+      let listing = response["cleanListing"];
+      let listingItem = listing[0];
+      let listingDate = listing[1];
+      let line = `<tr><td>${listingItem}</td></tr>`;
+      line = line + `<td>${listingDate}</td>`;
+      $("inventory").append(line);
+      window.location.reload();
+    });
   });
 
   $("#deleteBtn").click(function () {
     let deleteItem = $("#delInput").val();
+    deleteEle = { deleteItem: deleteItem };
 
-    $.get("/edit", { deleteItem: "deleteitem" }, function (response) {
+    $.get("/edit", deleteEle, function (response) {
+      console.log(response["inventoryList"]);
       let listing = response["inventoryList"];
       let listingItem = listing[0];
       let listingDate = listing[1];
