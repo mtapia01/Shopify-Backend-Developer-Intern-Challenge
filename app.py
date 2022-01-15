@@ -75,42 +75,37 @@ def edit():
         updatedItem = request.args.get("newItem")        
 
         cleanFile = []
-        
-        editList = []
-
-        for i in range(len(inventory)):
-                row = inventory[i]
-                element = row.split(',')
-                item = element[0]
-
-                if item == editItemID:
-                        item = updatedItem
-
-                itemDate = element[1]
-                itemID = element[2]
-                if itemID == editItemID[0]:
-                        item = updatedItem
-                editList.append(row)
-                
-                cleanRow = {
-                        'cleanItem': item,
-                        'cleanDate': itemDate,
-                        'cleanID': itemID
-                }
-                cleanFile.append(cleanRow)
-        # print(cleanFile)
-                        
+                                
         with open('inventory.csv', 'r+') as f:
                 data = f.read()
                 f.seek(0)
-                for i in range(len(cleanFile)):
+                for i in range(len(inventory)):
+                        row = inventory[i]
+                        element = row.split(',')
+                        item = element[0]
+
+                        if item == editItemID:
+                                item = updatedItem
+
+                        itemDate = element[1]
+                        itemID = element[2]
+                        if itemID == editItemID[0]:
+                                item = updatedItem
+                        
+                        cleanRow = {
+                                'cleanItem': item,
+                                'cleanDate': itemDate,
+                                'cleanID': itemID
+                        }
                         f.write(item)
                         f.write(',')
                         f.write(itemDate)
                         f.write(',')
                         f.write(itemID)
-                f.truncate()
-        f.close()
+                        f.truncate()
+                f.close()
+                cleanFile.append(cleanRow)
+
         return {'cleanListing': cleanFile}     
 
 @app.route('/delete')
@@ -134,11 +129,7 @@ def delete():
                         element = row.split(',')
                         itemDate = element[1]
                         itemID = element[2]
-                # if item == editItemID:
-                #         del item
-                #         del itemDate
-                #         del itemID
-                # editList.append(row)
+                
                         cleanRow = {
                                 'cleanItem': item,
                                 'cleanDate': itemDate,
