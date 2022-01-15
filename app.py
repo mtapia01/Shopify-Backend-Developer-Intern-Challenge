@@ -35,15 +35,14 @@ def newitem():
         with open('inventory.csv', 'a', newline='\n')as file:
                 writer = csv.writer(file)
                 writer.writerow(newListing)
+        file.close()
         return {"inventoryList": newListing}, 201
 
 @app.route('/cvsDisplay')
 def cvsDisplay():
         cvsFile = open('inventory.csv', 'r')
-        # print(cvsFile)
         inventory = cvsFile.readlines()
         cvsFile.close
-        # print(inventory)
 
         for i in range(len(inventory)):
                 inventory[i] = inventory[i].strip()
@@ -77,90 +76,87 @@ def edit():
 
         cleanFile = []
         
-        print(inventory)
         editList = []
-        # if len(editItem) != 0:
-        editItem = "dog"
+
         for i in range(len(inventory)):
                 row = inventory[i]
-                print(row)
                 element = row.split(',')
                 item = element[0]
-                print(item)
-                if item == editItem:
+
+                if item == editItemID:
                         item = updatedItem
 
                 itemDate = element[1]
                 itemID = element[2]
-                editList.append(row)
-                if editItemID == itemID:
-                        print("updating")
+                if itemID == editItemID[0]:
                         item = updatedItem
+                editList.append(row)
+                
                 cleanRow = {
                         'cleanItem': item,
                         'cleanDate': itemDate,
                         'cleanID': itemID
                 }
-
                 cleanFile.append(cleanRow)
+        # print(cleanFile)
                         
+        with open('inventory.csv', 'r+') as f:
+                data = f.read()
+                f.seek(0)
+                for i in range(len(cleanFile)):
+                        f.write(item)
+                        f.write(',')
+                        f.write(itemDate)
+                        f.write(',')
+                        f.write(itemID)
+                f.truncate()
+        f.close()
+        return {'cleanListing': cleanFile}     
 
-        # myfile.close()
-        print(cleanFile)
-        with open('inventory.csv','w') as myfile:
-                for i in range(len(editList)):
-                        row = editList[i]
+@app.route('/delete')
+def delete():
+        cvsFile = open('inventory.csv', 'r')
+        inventory = cvsFile.readlines()
+        cvsFile.close
+
+        editItemID = request.args.get("delItem")       
+
+        cleanFile = []
+        
+        for i in range(len(inventory)):
+                row = inventory[i]
+                element = row.split(',')
+                item = element[0]
+                if item == editItemID:
+                        print("deleting")
+                else:
+                        row = inventory[i]
                         element = row.split(',')
-                        item = element[0]
                         itemDate = element[1]
                         itemID = element[2]
-                        myfile.write(item)
-                        myfile.write(',')
-                        myfile.write(itemDate)
-                        myfile.write(',')
-                        myfile.write(itemDate+'\n')
-
-
-        # print(cleanFile)
-        return {'cleanListing': cleanFile}
-        
-        # return cvsDisplay()
-
-                # elif len(deleteItem) != 0:
-                #         for i in range(len(inventory)):
-                #                 row = inventory[i]
-                #                 element = row.split(',')
-                #                 item = element[0]
-                #                 itemDate = element[1]
-                #                 cleanRow = {
-                #                         'cleanItem': item,
-                #                         'cleanDate': itemDate
-                #                 }
-                #                 if cleanRow[0] == request.args.get("deleteItem"):
-                #                         cleanRow[0] = ""
-                #                         cleanRow[1] = ""
-                #                 cleanFile.append(cleanRow)
-                #                 i = i + 1
-                # with open('inventory.csv', 'w') as myfile:
-                #         myfile.write(cleanFile)
-                #         cleanFile = []
-        # else:
-        #         for i in range(len(inventory)):
-        #                 row = inventory[i]
-        #                 element = row.split(',')
-        #                 item = element[0]
-        #                 itemDate = element[1]
-        #                 cleanRow = {
-        #                         'cleanItem': item,
-        #                         'cleanDate': itemDate
-        #                 }
-        #                 cleanFile.append(cleanRow)
-        #         print(cleanFile)
-
-        #         return {'cleanListing': cleanFile}
-                
-                # make a list then send them all at once instead of one at a time that way you can still edit
-        
+                # if item == editItemID:
+                #         del item
+                #         del itemDate
+                #         del itemID
+                # editList.append(row)
+                        cleanRow = {
+                                'cleanItem': item,
+                                'cleanDate': itemDate,
+                                'cleanID': itemID
+                        }
+                        cleanFile.append(cleanRow)
+        with open('inventory.csv', 'r+') as f:
+                data = f.read()
+                f.seek(0)
+                for i in range(len(cleanFile)):
+                        f.write(item)
+                        f.write(',')
+                        f.write(itemDate)
+                        f.write(',')
+                        f.write(itemID)
+                f.truncate()
+        f.close()
+        return {'cleanListing': cleanFile}     
 
 # ===============================================================================
 if __name__ == '__main__':
