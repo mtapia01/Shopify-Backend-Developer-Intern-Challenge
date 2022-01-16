@@ -21,14 +21,12 @@ $(document).ready(function () {
   $.get("/cvsDisplay", {}, function (response) {
     let itemListings = response["cleanListing"];
     console.log(itemListings);
-
     for (let i = 0; i < itemListings.length; i++) {
       let current = itemListings[i];
       let fileItem = current["cleanItem"];
       let fileID = current["id"];
       $("#itemList").append(`-<b>${fileItem} ID:${fileID}</b><br />`);
       let fileDate = current["cleanDate"];
-
       let line = `<tr><td><b>${fileItem}</b></td>`;
       line = line + `<td>${fileDate}</td></tr>`;
       $("#inventory").append(line);
@@ -46,7 +44,6 @@ $(document).ready(function () {
       return;
     } else {
       editpair = { oldItem: oldItem, newItem: newItem };
-
       $.get("/edit", editpair, function (response) {
         console.log(response["cleanListing"]);
         let listing = response["cleanListing"];
@@ -66,7 +63,6 @@ $(document).ready(function () {
       return;
     } else {
       deleteItem = { delItem: delItem };
-
       $.get("/delete", deleteItem, function (response) {
         let listing = response["cleanListing"];
         let listingItem = listing[0];
@@ -80,20 +76,16 @@ $(document).ready(function () {
   });
   //From https://codepen.io/brian-guerrero/pen/LZGrJe
   function createCSV(array) {
-    // let array = response["cleanListing"];
-    var keys = Object.keys(array[0]); //Collects Table Headers
-
-    var result = ""; //CSV Contents
-    result += keys.join(","); //Comma Seperates Headers
-    result += "\n"; //New Row
+    var keys = Object.keys(array[0]);
+    var result = "";
+    result += keys.join(",");
+    result += "\n";
 
     array.forEach(function (item) {
-      //Goes Through Each Array Object
       keys.forEach(function (key) {
-        //Goes Through Each Object value
-        result += item[key] + ","; //Comma Seperates Each Key Value in a Row
+        result += item[key] + ",";
       });
-      result += "\n"; //Creates New Row
+      result += "\n";
     });
 
     return result;
