@@ -1,0 +1,14 @@
+/* https://www.w3schools.com/howto/howto_css_download_button.asp */
+.btnDownload {
+  background-color: DodgerBlue;
+  border: none;
+  color: white;
+  padding: 12px 30px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+/* Darker background on mouse-over */
+.btn:hover {
+  background-color: RoyalBlue;
+}

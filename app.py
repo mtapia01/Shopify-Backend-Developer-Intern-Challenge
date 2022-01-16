@@ -1,8 +1,10 @@
+from math import radians
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import csv
 import json
-import uuid
+import random
+
 
 from datetime import date
 app = Flask(__name__, static_folder = 'static', template_folder = 'templates')
@@ -16,6 +18,13 @@ CORS(app)
 def home():
     return render_template('index.html')
 
+@app.route('/inventoryFile')
+def inventoryFile():
+        # file = open('inventory.csv', 'r')
+        # inventory = file.readlines()
+        # file.close
+
+        return cvsDisplay()
 
 @app.route('/newitem')
 def newitem():
@@ -25,7 +34,10 @@ def newitem():
         cvsFile = open('inventory.csv', 'r')
         inventory = cvsFile.readlines()
         cvsFile.close
-        id = len(inventory) + 1
+
+        randomNumber = list(range(1000))
+        random.shuffle(randomNumber)
+        id = randomNumber.pop()
 
         newListing = [
                 item,
@@ -117,36 +129,36 @@ def delete():
         editItemID = request.args.get("delItem")       
 
         cleanFile = []
-        
-        for i in range(len(inventory)):
-                row = inventory[i]
-                element = row.split(',')
-                item = element[0]
-                if item == editItemID:
-                        print("deleting")
-                else:
-                        row = inventory[i]
-                        element = row.split(',')
-                        itemDate = element[1]
-                        itemID = element[2]
-                
-                        cleanRow = {
-                                'cleanItem': item,
-                                'cleanDate': itemDate,
-                                'cleanID': itemID
-                        }
-                        cleanFile.append(cleanRow)
+
         with open('inventory.csv', 'r+') as f:
                 data = f.read()
                 f.seek(0)
-                for i in range(len(cleanFile)):
-                        f.write(item)
-                        f.write(',')
-                        f.write(itemDate)
-                        f.write(',')
-                        f.write(itemID)
-                f.truncate()
-        f.close()
+                for i in range(len(inventory)):
+                        row = inventory[i]
+                        element = row.split(',')
+                        item = element[0]
+                        itemDate = element[1]
+                        itemID = element[2]
+
+                        if item == editItemID:
+                                print("deleting")
+                                del item
+                                del itemDate
+                                del itemID
+                        else:
+                                cleanRow = {
+                                        'cleanItem': item,
+                                        'cleanDate': itemDate,
+                                        'cleanID': itemID
+                                }
+                                f.write(item)
+                                f.write(',')
+                                f.write(itemDate)
+                                f.write(',')
+                                f.write(itemID)
+                                f.truncate()
+                        cleanFile.append(cleanRow)
+                f.close()
         return {'cleanListing': cleanFile}     
 
 # ===============================================================================

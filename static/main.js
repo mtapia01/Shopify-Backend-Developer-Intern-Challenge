@@ -1,20 +1,23 @@
 $(document).ready(function () {
   $("#addItemBtn").click(function () {
     let item = $("#itemInput").val();
-    listing = { item: item };
-
-    $.get("/newitem", listing, function (response) {
-      console.log(response["inventoryList"]);
-      let listing = response["inventoryList"];
-      let listingItem = listing[0];
-      let listingDate = listing[1];
-      let line = `<tr><td>${listingItem}</td></tr>`;
-      line = line + `<td>${listingDate}</td>`;
-      $("inventory").append(line);
-      window.location.reload();
-    });
+    if (item.length == 0) {
+      alert("Error: Type in an item");
+      return;
+    } else {
+      listing = { item: item };
+      $.get("/newitem", listing, function (response) {
+        console.log(response["inventoryList"]);
+        let listing = response["inventoryList"];
+        let listingItem = listing[0];
+        let listingDate = listing[1];
+        let line = `<tr><td>${listingItem}</td></tr>`;
+        line = line + `<td>${listingDate}</td>`;
+        $("inventory").append(line);
+        window.location.reload();
+      });
+    }
   });
-  // function csvDisplay() {
   $.get("/cvsDisplay", {}, function (response) {
     let itemListings = response["cleanListing"];
     console.log(itemListings);
@@ -31,24 +34,15 @@ $(document).ready(function () {
       $("#inventory").append(line);
     }
   });
-  // }
-  // csvDisplay();
-  // function isEmpty(inputtx) {
-  //   if (inputtx.value.length == 0) {
-  //     alert("Error: Enter an Item");
-  //     return true;
-  //   }
-  //   return false;
-  // }
   $("#editBtn").click(function () {
     let oldItem = $("#editInput").val();
     let newItem = $("#updateInput").val();
     console.log(oldItem.length);
     if (oldItem.length == 0) {
-      alert("Error");
+      alert("Error: Type in an item");
       return;
     } else if (newItem.length == 0) {
-      alert("Error");
+      alert("Error: type in a new item");
       return;
     } else {
       editpair = { oldItem: oldItem, newItem: newItem };
@@ -66,20 +60,57 @@ $(document).ready(function () {
     }
   });
   $("#deleteBtn").click(function () {
-    if ($("#delInput").length == 0) {
-      alert("Error: Enter an item to delete");
-    }
     let delItem = $("#delInput").val();
-    deleteItem = { delItem: delItem };
+    if (delItem.length == 0) {
+      alert("Error: Enter an item to delete");
+      return;
+    } else {
+      deleteItem = { delItem: delItem };
 
-    $.get("/delete", deleteItem, function (response) {
-      let listing = response["cleanListing"];
-      let listingItem = listing[0];
-      let listingDate = listing[1];
-      let line = `<tr><td>${listingItem}</td></tr>`;
-      line = line + `<td>${listingDate}</td>`;
-      $("inventory").append(line);
-      window.location.reload();
+      $.get("/delete", deleteItem, function (response) {
+        let listing = response["cleanListing"];
+        let listingItem = listing[0];
+        let listingDate = listing[1];
+        let line = `<tr><td>${listingItem}</td></tr>`;
+        line = line + `<td>${listingDate}</td>`;
+        $("inventory").append(line);
+        window.location.reload();
+      });
+    }
+  });
+  //From https://codepen.io/brian-guerrero/pen/LZGrJe
+  function createCSV(array) {
+    // let array = response["cleanListing"];
+    var keys = Object.keys(array[0]); //Collects Table Headers
+
+    var result = ""; //CSV Contents
+    result += keys.join(","); //Comma Seperates Headers
+    result += "\n"; //New Row
+
+    array.forEach(function (item) {
+      //Goes Through Each Array Object
+      keys.forEach(function (key) {
+        //Goes Through Each Object value
+        result += item[key] + ","; //Comma Seperates Each Key Value in a Row
+      });
+      result += "\n"; //Creates New Row
     });
+
+    return result;
+  }
+  $("#downloadBtn").click(function () {
+    // function downloadCSV(array) {
+    $.get("/inventoryFile", {}, function (response) {
+      let itemListings = response["cleanListing"];
+
+      //From https://codepen.io/brian-guerrero/pen/LZGrJe
+      csv = "data:text/csv;charset=utf-8," + createCSV(itemListings);
+      excel = encodeURI(csv);
+      link = document.createElement("a");
+      link.setAttribute("href", excel);
+      link.setAttribute("download", "test.csv");
+      link.click();
+    });
+    // }
   });
 });
