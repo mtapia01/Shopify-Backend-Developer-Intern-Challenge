@@ -2,8 +2,9 @@ from math import radians
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import csv
-import json
 import random
+import pdb
+import re
 
 
 from datetime import date
@@ -20,10 +21,6 @@ def home():
 
 @app.route('/inventoryFile')
 def inventoryFile():
-        # file = open('inventory.csv', 'r')
-        # inventory = file.readlines()
-        # file.close
-
         return cvsDisplay()
 
 @app.route('/newitem')
@@ -98,12 +95,12 @@ def edit():
 
                         if item == editItemID:
                                 item = updatedItem
+                        
 
                         itemDate = element[1]
-                        itemID = element[2]
-                        if itemID == editItemID[0]:
-                                item = updatedItem
                         
+                        itemID = element[2]
+
                         cleanRow = {
                                 'cleanItem': item,
                                 'cleanDate': itemDate,

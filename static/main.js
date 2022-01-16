@@ -108,9 +108,8 @@ $(document).ready(function () {
       excel = encodeURI(csv);
       link = document.createElement("a");
       link.setAttribute("href", excel);
-      link.setAttribute("download", "test.csv");
+      link.setAttribute("download", "inventory.csv");
       link.click();
     });
-    // }
   });
 });
